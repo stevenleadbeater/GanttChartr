@@ -301,8 +301,7 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
     bindingLog["element"] = element;
 
     //Save the binding reference in the repeaters array of references
-    this.bindings[dataAccessor] = this.bindings[dataAccessor] || [];
-    this.bindings[dataAccessor].push(bindingLog);
+    this.bindings[dataAccessor] = bindingLog;
 
     //}
 
@@ -525,7 +524,17 @@ Templatr.prototype.addToRepeater = function (repeater, data, dataAccessor) {
         var element;
         if (children[j].tagName === "REPEATER" || children[j].tagName === "SELECT" || children[j].tagName === "UL" || children[j].tagName === "TR" || children[j].tagName === "TBODY") {
 
-            element = this.bindRepeater(children[j].cloneNode(true), data, dataAccessor);
+            //This is the property name of an array
+            var dataSource = this.Pattern.exec(children[j].getAttribute("DataSource"));
+
+            if (dataSource != null) {
+
+                //Repeater is bound
+                dataSource = dataSource[1].replace(/^\s+|\s+$/gm, "");
+                element = this.bindRepeater(children[j].cloneNode(true), data[dataSource], dataAccessor + "." + dataSource);
+            } else {
+                element = this.bindRepeater(children[j].cloneNode(true), data, dataAccessor);
+            }
         } else {
             //Bind the HTML element to the data
             element = this.bindElement(children[j].cloneNode(true), data, dataAccessor);
@@ -712,7 +721,7 @@ Templatr.prototype._mergeRecursive = function (newDataModel, updateTarget, dataA
                     binding.boundValue = newDataModel[p];
                 } else if (binding.boundValue != newDataModel[p]) {
                     //attributes value or part of
-                    elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, newDataModel[p]);
+                    elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, " " + newDataModel[p]);
                     binding.boundValue = newDataModel[p];
                 }
             } else if (typeof (binding = this.bindings[dataAccessor]) !== "undefined" && typeof binding.repeater !== "undefined") {

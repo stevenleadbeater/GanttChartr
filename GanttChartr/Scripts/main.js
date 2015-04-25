@@ -41,33 +41,98 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     var data = {};
     data.Header = dateRangeHandler.dataStructure.Header;
     data.Rows = [];
-    
-    data.Rows.push(this.MakeRow(dateRangeHandler.dataStructure.row, [
+
+    var row1 = this.MakeRow(dateRangeHandler.dataStructure.row, [
         {
             startDate: new Date(2015, 0, 1),
             endDate: new Date(2015, 1, 0)
         }
-    ]));
+    ]);
+    data.Rows.push(row1);
 
-    data.Rows.push(this.MakeRow(dateRangeHandler.dataStructure.row, [
+    var row2 = this.MakeRow(dateRangeHandler.dataStructure.row, [
         {
             startDate: new Date(2015, 0, 10),
             endDate: new Date(2015, 1, 0)
         }
-    ]));
+    ]);
+    data.Rows.push(row2);
 
-    data.Rows.push(this.MakeRow(dateRangeHandler.dataStructure.row, [
+    var row3 = this.MakeRow(dateRangeHandler.dataStructure.row, [
         {
             startDate: new Date(2015, 1, 0),
             endDate: new Date(2015, 2, 0)
         }
-    ]));
+    ]);
+    data.Rows.push(row3);
 
     var boundView = templatr.bind("calendar", data);
     document.getElementById("content").appendChild(boundView);
+
+    var self = this;
+
+    var counter = 0;
+    setInterval(function () {
+        if (counter === 0) {
+            counter = 1;
+            data.Rows = [];
+
+            var row1 = self.MakeRow(dateRangeHandler.dataStructure.row, [
+                {
+                    startDate: new Date(2015, 0, 10),
+                    endDate: new Date(2015, 1, 0)
+                }
+            ]);
+            data.Rows.push(row1);
+
+            var row2 = self.MakeRow(dateRangeHandler.dataStructure.row, [
+                {
+                    startDate: new Date(2015, 1, 0),
+                    endDate: new Date(2015, 2, 0)
+                }
+            ]);
+            data.Rows.push(row2);
+
+            var row3 = self.MakeRow(dateRangeHandler.dataStructure.row, [
+                {
+                    startDate: new Date(2015, 0, 1),
+                    endDate: new Date(2015, 1, 0)
+                }
+            ]);
+            data.Rows.push(row3);
+        } else {
+            counter = 0;
+            data.Rows = [];
+
+            var row1 = self.MakeRow(dateRangeHandler.dataStructure.row, [
+                {
+                    startDate: new Date(2015, 0, 1),
+                    endDate: new Date(2015, 1, 0)
+                }
+            ]);
+            data.Rows.push(row1);
+
+            var row2 = self.MakeRow(dateRangeHandler.dataStructure.row, [
+                {
+                    startDate: new Date(2015, 0, 10),
+                    endDate: new Date(2015, 1, 0)
+                }
+            ]);
+            data.Rows.push(row2);
+
+            var row3 = self.MakeRow(dateRangeHandler.dataStructure.row, [
+                {
+                    startDate: new Date(2015, 1, 0),
+                    endDate: new Date(2015, 2, 0)
+                }
+            ]);
+            data.Rows.push(row3);
+        }
+        templatr.updateDataModel(data);
+    }, 100);
 };
 
-Main.prototype.MakeRow = function(rowTemplate, highlights) {
+Main.prototype.MakeRow = function (rowTemplate, highlights) {
     var row = {}
     this.CloneObject(row, rowTemplate);
 

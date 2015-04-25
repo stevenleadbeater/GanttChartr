@@ -1,6 +1,7 @@
 ﻿.calendarDetails1DayName {
-    border: 1px solid black;
+    border-left: 1px solid black;
     border-collapse: collapse;
+    border-top: 1px solid black;
 }
 
 .calendarDetails1DayName.highlight {
