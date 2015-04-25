@@ -70,18 +70,20 @@
     <Content Include="CSS\calendarDetails1Theme.css" />
     <Content Include="CSS\calendarHeader1Theme.css" />
     <Content Include="index.html" />
-    <Content Include="Scripts\Frameowrks\templatr.js" />
+    <Content Include="Scripts\DateRangeHandler.js" />
+    <Content Include="Scripts\Frameworks\JSONT.js" />
+    <Content Include="Scripts\Frameworks\templatr.js" />
     <Content Include="packages.config" />
-    <None Include="Scripts\jquery-2.1.3.intellisense.js" />
-    <Content Include="Scripts\jquery-2.1.3.js" />
-    <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <None Include="Scripts\Frameworks\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\Frameworks\jquery-2.1.3.js" />
+    <Content Include="Scripts\Frameworks\jquery-2.1.3.min.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\testData1.js" />
     <Content Include="Views\CalendarDetails1.html" />
     <Content Include="Views\CalendarGrid.html" />
     <Content Include="Views\CalendarHeader1.html" />
     <Content Include="Web.config" />
-    <Content Include="Scripts\jquery-2.1.3.min.map" />
+    <Content Include="Scripts\Frameworks\jquery-2.1.3.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

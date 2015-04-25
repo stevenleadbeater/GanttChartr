@@ -35,6 +35,17 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     templatr.addView("header", headerView);
     templatr.addView("detail", detailView);
 
-    var boundView = templatr.bind("calendar", testData1);
+    var dateRangeHandler = new DateRangeHandler(new Date(2014, 0, 1), new Date(2015, 0, 1));
+    dateRangeHandler.GenerateDataStructure();
+    var data = {};
+    data.Header = dateRangeHandler.dataStructure.Header;
+    data.Rows = [];
+
+    for (var i = 0; i <= 100; i++) {
+        data.Rows.push(dateRangeHandler.dataStructure.row);
+    }
+    data.Rows.push(dateRangeHandler.dataStructure.row);
+
+    var boundView = templatr.bind("calendar", data);
     document.getElementById("content").appendChild(boundView);
 };

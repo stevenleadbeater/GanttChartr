@@ -6,4 +6,5 @@
 
 .calendarDetails1Row {
     height: 22px;
+    white-space: nowrap;
 }

@@ -8,3 +8,11 @@
       width: 20px;
       display: inline-block;
 }
+
+.calendarHeader1MonthName {
+    text-align: center;
+}
+
+.calendarHeader1AlignmentFix {
+    text-align: left;
+}
