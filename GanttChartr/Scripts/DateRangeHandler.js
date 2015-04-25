@@ -94,7 +94,10 @@ DateRangeHandler.prototype.GetDaysArray = function (year, month) {
 
     while (i < length) {
         dayArray.push({
-            "dayName": i + 1
+            "dayName": i + 1,
+            "yearName": parseInt(year),
+            "monthName": month,
+            "highlight": " "
         });
         i++;
     }

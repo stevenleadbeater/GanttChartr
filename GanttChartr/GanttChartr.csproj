@@ -78,6 +78,7 @@
     <Content Include="Scripts\Frameworks\jquery-2.1.3.js" />
     <Content Include="Scripts\Frameworks\jquery-2.1.3.min.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\RowController.js" />
     <Content Include="Scripts\testData1.js" />
     <Content Include="Views\CalendarDetails1.html" />
     <Content Include="Views\CalendarGrid.html" />

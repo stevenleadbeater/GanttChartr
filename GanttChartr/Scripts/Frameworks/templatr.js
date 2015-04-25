@@ -92,7 +92,17 @@ Templatr.prototype.bindTemplate = function (template, data, dataAccessor) {
         var child = HtmlParser.children[i];
         if (child.tagName == "REPEATER" || child.tagName == "SELECT" || child.tagName == "UL" || child.tagName == "TR" || child.tagName == "TBODY") {
             //bind repeater
-            returnValue.appendChild(this.bindRepeater(child, data, dataAccessor));
+            //This is the property name of an array
+            var dataSource = this.Pattern.exec(child.getAttribute("DataSource"));
+
+            if (dataSource != null) {
+
+                //Repeater is bound
+                dataSource = dataSource[1].replace(/^\s+|\s+$/gm, "");
+                returnValue.appendChild(this.bindRepeater(child, data[dataSource], dataAccessor + "." + dataSource));
+            } else {
+                returnValue.appendChild(this.bindRepeater(child, data, dataAccessor));
+            }
         } else {
             //bind element
             returnValue.appendChild(this.bindElement(child, data, dataAccessor));

@@ -2,3 +2,7 @@
     border: 1px solid black;
     border-collapse: collapse;
 }
+
+.calendarDetails1DayName.highlight {
+    background-color: yellow;
+}
