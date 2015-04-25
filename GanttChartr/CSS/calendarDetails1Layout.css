@@ -1,0 +1,9 @@
+﻿.calendarDetails1DayName {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.calendarDetails1Row {
+    height: 22px;
+}

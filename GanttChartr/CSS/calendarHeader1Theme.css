@@ -1,0 +1,12 @@
+﻿.calendarHeader1MonthName,
+.calendarHeader1YearName {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-collapse: collapse;
+}
+
+.calendarHeader1DayName {
+    border: 1px solid black;
+    border-collapse: collapse;
+}

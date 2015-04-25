@@ -1,0 +1,10 @@
+﻿.calendarHeader1Layout {
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.calendarHeader1DayName {
+      width: 20px;
+      display: inline-block;
+}
