@@ -21,7 +21,7 @@ RowController.prototype.SpliceData = function () {
                 {
                     name: highlight.name,
                     className: "highlight",
-                    width: "width: " + ((this.GetDaysBetween(highlight.startDate, highlight.endDate)*21) - 1) + "px;"
+                    width: "width: " + ((this.GetDaysBetween(highlight.startDate, highlight.endDate)*21) - 5) + "px;"
                 }];
             } else {
                 day.highlight = " ";

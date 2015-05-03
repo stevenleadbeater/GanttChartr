@@ -1,13 +1,13 @@
 ﻿.calendarDetails1DayName {
     width: 20px;
-    height: 22px;
+    height: 24px;
     display: inline-block;
     border-collapse: collapse;
     vertical-align: top;
 }
 
 .calendarDetails1Row {
-    height: 22px;
+    height: 24px;
     white-space: nowrap;
 }
 
@@ -15,4 +15,5 @@
     display: inline-block;
     z-index: 1;
     position: relative;
+    padding: 2px;
 }

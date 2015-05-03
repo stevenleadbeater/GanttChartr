@@ -596,38 +596,52 @@ Templatr.prototype.updateDataModel = function (newDataModel) {
     }
 
     //iterate over all the properties in the new model
-    for (var p in newDataModel) {
+    if (Object.prototype.toString.call(newDataModel) === "[object Array]") {
 
-        // That node exists, this is an update or a repeater. Off load to merge recursive
-        if (newDataModel.hasOwnProperty(p) && typeof this.Model[p] !== "undefined") {
-            this._mergeRecursive(newDataModel[p], this.Model[p], p);
+        for (var index = 0, length = newDataModel.length; index < length; index++) {
 
+            this._updateTopLevelDataModelProperty(newDataModel, index);
+        }
+    } else if (Object.prototype.toString.call(newDataModel) === "[object Object]") {
+
+        for (var p in newDataModel) {
+
+            this._updateTopLevelDataModelProperty(newDataModel, p);
+        }
+    }
+};
+
+Templatr.prototype._updateTopLevelDataModelProperty = function (newDataModel, property) {
+
+    // That node exists, this is an update or a repeater. Off load to merge recursive
+    if (newDataModel.hasOwnProperty(property) && typeof this.Model[property] !== "undefined") {
+        this._mergeRecursive(newDataModel[property], this.Model[property], property);
+
+    } else {
+
+        this.Model[property] = newDataModel[property];
+
+        var binding = this.bindings[""];
+
+        if (Object.prototype.toString.call(binding) === "[object Array]") {
+            //We need to add to our repeater
+
+            var repElem;
+            for (var index = 0; index < binding.length; index++) {
+                if (typeof binding[index].repeater !== "undefined") {
+                    repElem = document.getElementById(binding[index].elementId);
+                    repElem.appendChild(this.addToTopLevelRepeater(binding[index].repeater, newDataModel[property], property));
+                    break;
+                }
+            }
         } else {
 
-            this.Model[p] = newDataModel[p];
+            if (this.parentOfTopLevel === null) {
 
-            var binding = this.bindings[""];
-
-            if (Object.prototype.toString.call(binding) === "[object Array]") {
-                //We need to add to our repeater
-
-                var repElem;
-                for (var index = 0; index < binding.length; index++) {
-                    if (typeof binding[index].repeater !== "undefined") {
-                        repElem = document.getElementById(binding[index].elementId);
-                        repElem.appendChild(this.addToTopLevelRepeater(binding[index].repeater, newDataModel[p], p));
-                        break;
-                    }
-                }
-            } else {
-
-                if (this.parentOfTopLevel === null) {
-
-                    this.parentOfTopLevel = document.getElementById(binding.elementId);
-                }
-
-                this.parentOfTopLevel.appendChild(this.addToTopLevelRepeater(binding.repeater, newDataModel[p], p));
+                this.parentOfTopLevel = document.getElementById(binding.elementId);
             }
+
+            this.parentOfTopLevel.appendChild(this.addToTopLevelRepeater(binding.repeater, newDataModel[property], property));
         }
     }
 };
@@ -673,85 +687,98 @@ Templatr.prototype._mergeRecursive = function (newDataModel, updateTarget, dataA
         }
     }
 
-    //TODO: review this, it could be an array in which case this is not particularly quick
     //iterate over all the properties in the new data model at this level
-    for (var p in newDataModel) {
+    if (Object.prototype.toString.call(newDataModel) === "[object Array]") {
 
-        // Think about this again, the if statement isn't right. Seems like this is working because of what typeof returns
-        if (newDataModel.hasOwnProperty(p) && typeof updateTarget[p] !== "undefined" && typeof updateTarget[p] !== "string" &&
-            (Object.prototype.toString.call(newDataModel[p]) === "[object Array]" || Object.prototype.toString.call(newDataModel[p]) === "[object Object]")) {
-            this._mergeRecursive(newDataModel[p], updateTarget[p], dataAccessor + "." + p);
+        for (var index = 0, length = newDataModel.length; index < length; index++) {
 
-        } else {
-            //Update our model with the new value
-            updateTarget[p] = newDataModel[p];
+            this._updateModelProperty(newDataModel, index, updateTarget, dataAccessor);
+        }
+    } else if (Object.prototype.toString.call(newDataModel) === "[object Object]") {
 
-            //Find the existing binding for this point in the model
-            var binding = typeof this.bindings[dataAccessor + "." + p] !== "undefined" ? this.bindings[dataAccessor + "." + p] : this.bindings["." + dataAccessor + "." + p];
+        for (var p in newDataModel) {
 
-            //Is this a binding statement
-            if (binding && binding.type == "bindingReplacement") {
+            this._updateModelProperty(newDataModel, p, updateTarget, dataAccessor);
+        }
+    }
+};
 
-                //Found it and it's a binding statement, get the element
-                var elem = document.getElementById(binding.elementId);
+Templatr.prototype._updateModelProperty = function (newDataModel, p, updateTarget, dataAccessor) {
 
-                //Make sure this value is actually different before attacking the DOM
-                if (binding.replacementType == "innerText" && binding.boundValue != newDataModel[p]) {
-                    //Elements value
-                    elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel[p]);
-                    binding.boundValue = newDataModel[p];
-                } else if (binding.boundValue != newDataModel[p]) {
-                    //attributes value or part of
-                    elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, " " + newDataModel[p]);
-                    binding.boundValue = newDataModel[p];
-                }
-            } else if (typeof (binding = this.bindings[dataAccessor]) !== "undefined" && typeof binding.repeater !== "undefined") {
-                //We need to add to our repeater
-                document.getElementById(binding.elementId).appendChild(this.addToRepeater(binding.repeater, newDataModel[p], dataAccessor + "." + p));
-            } else if (typeof (binding = this.bindings["." + dataAccessor]) !== "undefined" && binding.type == "bindingReplacement") {
+    // Think about this again, the if statement isn't right. Seems like this is working because of what typeof returns
+    if (newDataModel.hasOwnProperty(p) && typeof updateTarget[p] !== "undefined" && typeof updateTarget[p] !== "string" &&
+        (Object.prototype.toString.call(newDataModel[p]) === "[object Array]" || Object.prototype.toString.call(newDataModel[p]) === "[object Object]")) {
+        this._mergeRecursive(newDataModel[p], updateTarget[p], dataAccessor + "." + p);
 
-                //Found it and it's a binding statement, get the element
-                var elem = document.getElementById(binding.elementId);
+    } else {
+        //Update our model with the new value
+        updateTarget[p] = newDataModel[p];
 
-                //Make sure this value is actually different before attacking the DOM
-                if (binding.replacementType === "innerText" && binding.boundValue != newDataModel) {
-                    //Elements value
-                    elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel);
-                    binding.boundValue = newDataModel;
-                } else if (binding.boundValue != newDataModel) {
-                    //attributes value or part of
-                    elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, newDataModel);
-                    binding.boundValue = newDataModel;
-                }
-            } else if (typeof (binding = this.bindings["." + dataAccessor + "." + p]) !== "undefined" && binding.type === "bindingReplacement") {
+        //Find the existing binding for this point in the model
+        var binding = typeof this.bindings[dataAccessor + "." + p] !== "undefined" ? this.bindings[dataAccessor + "." + p] : this.bindings["." + dataAccessor + "." + p];
 
-                //Found it and it's a binding statement, get the element
-                var elem = document.getElementById(binding.elementId);
+        //Is this a binding statement
+        if (binding && binding.type == "bindingReplacement") {
 
-                //Make sure this value is actually different before attacking the DOM
-                if (binding.replacementType == "innerText" && binding.boundValue != newDataModel[p]) {
-                    //Elements value
-                    elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel[p]);
-                    binding.boundValue = newDataModel[p];
-                } else if (binding.boundValue != newDataModel[p]) {
-                    //attributes value or part of
-                    elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, newDataModel[p]);
-                    binding.boundValue = newDataModel[p];
-                }
-            } else if (typeof (binding = this.bindings["." + dataAccessor]) !== "undefined" && binding.type == "repeater") {
-                //We need to add to our repeater
-                var repElem = document.getElementById(binding.elementId);
-                repElem.appendChild(this.addToRepeater(binding.repeater, newDataModel[p], "." + dataAccessor + "." + p));
-            } else if (typeof (binding = this.bindings["." + dataAccessor]) !== "undefined" && Object.prototype.toString.call(binding) === "[object Array]") {
-                //We need to add to our repeater
+            //Found it and it's a binding statement, get the element
+            var elem = document.getElementById(binding.elementId);
 
-                var repElem;
-                for (var index = 0; index < binding.length; index++) {
-                    if (typeof binding[index].repeater !== "undefined") {
-                        repElem = document.getElementById(binding[index].elementId);
-                        repElem.appendChild(this.addToRepeater(binding[index].repeater, newDataModel[p], "." + dataAccessor + "." + p));
-                        break;
-                    }
+            //Make sure this value is actually different before attacking the DOM
+            if (binding.replacementType == "innerText" && binding.boundValue != newDataModel[p]) {
+                //Elements value
+                elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel[p]);
+                binding.boundValue = newDataModel[p];
+            } else if (binding.boundValue != newDataModel[p]) {
+                //attributes value or part of
+                elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, " " + newDataModel[p]);
+                binding.boundValue = newDataModel[p];
+            }
+        } else if (typeof (binding = this.bindings[dataAccessor]) !== "undefined" && typeof binding.repeater !== "undefined") {
+            //We need to add to our repeater
+            document.getElementById(binding.elementId).appendChild(this.addToRepeater(binding.repeater, newDataModel[p], dataAccessor + "." + p));
+        } else if (typeof (binding = this.bindings["." + dataAccessor]) !== "undefined" && binding.type == "bindingReplacement") {
+
+            //Found it and it's a binding statement, get the element
+            var elem = document.getElementById(binding.elementId);
+
+            //Make sure this value is actually different before attacking the DOM
+            if (binding.replacementType === "innerText" && binding.boundValue != newDataModel) {
+                //Elements value
+                elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel);
+                binding.boundValue = newDataModel;
+            } else if (binding.boundValue != newDataModel) {
+                //attributes value or part of
+                elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, newDataModel);
+                binding.boundValue = newDataModel;
+            }
+        } else if (typeof (binding = this.bindings["." + dataAccessor + "." + p]) !== "undefined" && binding.type === "bindingReplacement") {
+
+            //Found it and it's a binding statement, get the element
+            var elem = document.getElementById(binding.elementId);
+
+            //Make sure this value is actually different before attacking the DOM
+            if (binding.replacementType == "innerText" && binding.boundValue != newDataModel[p]) {
+                //Elements value
+                elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel[p]);
+                binding.boundValue = newDataModel[p];
+            } else if (binding.boundValue != newDataModel[p]) {
+                //attributes value or part of
+                elem.attributes[binding.replacementType].value = elem.attributes[binding.replacementType].value.replace(binding.boundValue, newDataModel[p]);
+                binding.boundValue = newDataModel[p];
+            }
+        } else if (typeof (binding = this.bindings["." + dataAccessor]) !== "undefined" && binding.type == "repeater") {
+            //We need to add to our repeater
+            var repElem = document.getElementById(binding.elementId);
+            repElem.appendChild(this.addToRepeater(binding.repeater, newDataModel[p], "." + dataAccessor + "." + p));
+        } else if (typeof (binding = this.bindings["." + dataAccessor]) !== "undefined" && Object.prototype.toString.call(binding) === "[object Array]") {
+            //We need to add to our repeater
+
+            var repElem;
+            for (var index = 0; index < binding.length; index++) {
+                if (typeof binding[index].repeater !== "undefined") {
+                    repElem = document.getElementById(binding[index].elementId);
+                    repElem.appendChild(this.addToRepeater(binding[index].repeater, newDataModel[p], "." + dataAccessor + "." + p));
+                    break;
                 }
             }
         }
