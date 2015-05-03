@@ -60,18 +60,7 @@
 */
 Templatr.prototype.bind = function (template, data) {
 
-    if (Object.prototype.toString.call(data) === "[object Object]") {
-
-        this.Model = {};
-    } else if (Object.prototype.toString.call(data) === "[object Array]") {
-
-        this.Model = [];
-    } else {
-        throw "error: cannot clone non array / object";
-    }
-
-    //We are creating a view for the first time so store the data
-    this._cloneObject(this.Model, data);
+    this.Model = data;
 
     return this.bindTemplate(template, data, "");
 };
@@ -574,25 +563,12 @@ Templatr.prototype.addToTopLevelRepeater = function (repeater, data, dataAccesso
     return returnValue;
 };
 
-Templatr.prototype.updateDataModel = function (newDataModelParameter) {
+Templatr.prototype.updateDataModel = function (newDataModel) {
 
     /*This function expects the entire data model to be passed. It will re-use as much of what is in the DOM
     already as possible, synchronize the bindings and model and update the UI*/
 
-    //While there is less data in the new model that the old one
-    var newDataModel;
-    if (Object.prototype.toString.call(newDataModelParameter) === "[object Object]") {
-
-        newDataModel = {};
-    } else if (Object.prototype.toString.call(newDataModelParameter) === "[object Array]") {
-
-        newDataModel = [];
-    } else {
-        throw "error: cannot clone non array / object";
-    }
-
-    this._cloneObject(newDataModel, newDataModelParameter);
-
+    //While there is less data in the new model that the old one    
     while (this.Model.length > newDataModel.length) {
 
         /*Perform top level removals - this.bindings[this.Model.length - 1] is the last array of repeater contents
@@ -781,33 +757,3 @@ Templatr.prototype._mergeRecursive = function (newDataModel, updateTarget, dataA
         }
     }
 };
-
-
-/**
- * @private Adds all the properties from the obj2 parameter to the obj1 parameter and returns obj1
- * @param {string} [obj1] passed by reference, the object which will be populated with the new properties
- * @param {string} [obj2] The object which holds all the properties which are to be merged
- */
-Templatr.prototype._cloneObject = function (obj1, obj2) {
-
-    //iterate over all the properties in the object which is being consumed
-    for (var p in obj2) {
-        // Property in destination object set; update its value.
-        if (obj2.hasOwnProperty(p) && typeof obj1[p] !== "undefined") {
-            this._cloneObject(obj1[p], obj2[p]);
-
-        } else {
-            //We don't have that level in the heirarchy so add it
-
-            if (Object.prototype.toString.call(obj2[p]) === "[object Array]") {
-                obj1[p] = [];
-                this._cloneObject(obj1[p], obj2[p]);
-            } else if (Object.prototype.toString.call(obj2[p]) === "[object Object]") {
-                obj1[p] = {};
-                this._cloneObject(obj1[p], obj2[p]);
-            } else {
-                obj1[p] = obj2[p];
-            }
-        }
-    }
-}
