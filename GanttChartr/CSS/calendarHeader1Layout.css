@@ -16,3 +16,9 @@
 .calendarHeader1AlignmentFix {
     text-align: left;
 }
+
+.calendarHeader1MonthName,
+.calendarHeader1YearName,
+.calendarHeader1DayName {
+    border-collapse: collapse;
+}

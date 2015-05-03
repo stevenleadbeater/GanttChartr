@@ -320,13 +320,18 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
 
                 if (dataSource != null) {
 
+                    element.removeChild(child);
+
                     //Repeater is bound
                     dataSource = dataSource[1].replace(/^\s+|\s+$/gm, "");
-                    var repeaterResult = this.bindRepeater(child, data[dataSource], dataAccessor + "." + dataSource);
 
-                    //Swap the template element for the bound element
-                    element.removeChild(child);
-                    element.appendChild(repeaterResult);
+                    if (typeof data[dataSource] !== "undefined") {
+                        var repeaterResult = this.bindRepeater(child, data[dataSource], dataAccessor + "." + dataSource);
+
+                        //Swap the template element for the bound element
+                        element.appendChild(repeaterResult);
+                    }
+
                 } else if (Object.prototype.toString.call(data) === "[object Array]") {
                     var topLevelRepeaterResult = this.bindRepeater(child, data, dataAccessor);
 
@@ -366,7 +371,7 @@ Templatr.prototype.bindingReplacement = function (stringToReplaceIn, data, dataA
         var targetForReplacement = propertyToBind[0];
 
         //We can't bind to a property that isn't at the right level in the data. Check and error on fail
-        var sourceData = data[propertyName].toString();
+        var sourceData = typeof data[propertyName] !== "undefined" ? data[propertyName].toString() : null;
         if (sourceData) {
 
             stringToReplaceIn = stringToReplaceIn.replace(targetForReplacement, sourceData);

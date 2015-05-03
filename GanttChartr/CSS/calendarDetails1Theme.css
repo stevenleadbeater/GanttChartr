@@ -1,9 +1,12 @@
 ﻿.calendarDetails1DayName {
-    border-left: 1px solid black;
-    border-collapse: collapse;
-    border-top: 1px solid black;
+    border-left: 1px solid rgb(193, 193, 193);
 }
 
-.calendarDetails1DayName.highlight {
+.highlight {
     background-color: yellow;
+    border: 1px solid black;
+    height: 14px;
+    margin-top: 2px;
+    line-height: 14px;
+    margin-left: -1px;
 }

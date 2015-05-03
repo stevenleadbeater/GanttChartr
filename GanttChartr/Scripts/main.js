@@ -29,13 +29,34 @@ Main.prototype.HandleHeaderViewReturn = function (response, headerView) {
     });
 };
 
+var averages = {
+    update: {
+        count: 0,
+        values: []
+    }
+}
+
+var setAverage = function (modelNumber, timeElapsed) {
+    averages["update"].count++;
+    averages["update"].values.push(timeElapsed);
+    var total = 0;
+    for (var i in averages["update"].values) { total += averages["update"].values[i]; }
+    return (total / averages["update"].count);
+}
+
+
 Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) {
+    try {
+        var t1 = window.performance.now();
+    } catch (ex) {
+        var t1 = new Date().getTime();
+    }
     var templatr = new Templatr("test");
     templatr.addView("calendar", masterView);
     templatr.addView("header", headerView);
     templatr.addView("detail", detailView);
 
-    var dateRangeHandler = new DateRangeHandler(new Date(2015, 0, 1), new Date(2015, 3, 1));
+    var dateRangeHandler = new DateRangeHandler(new Date(2015, 0, 1), new Date(2015, 7, 1));
     dateRangeHandler.GenerateDataStructure();
 
     var data = {};
@@ -45,7 +66,8 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     var row1 = this.MakeRow(dateRangeHandler.dataStructure.row, [
         {
             startDate: new Date(2015, 0, 1),
-            endDate: new Date(2015, 1, 0)
+            endDate: new Date(2015, 1, 0),
+            name: "test1"
         }
     ]);
     data.Rows.push(row1);
@@ -53,7 +75,8 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     var row2 = this.MakeRow(dateRangeHandler.dataStructure.row, [
         {
             startDate: new Date(2015, 0, 10),
-            endDate: new Date(2015, 1, 0)
+            endDate: new Date(2015, 1, 0),
+            name: "test2"
         }
     ]);
     data.Rows.push(row2);
@@ -61,18 +84,29 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     var row3 = this.MakeRow(dateRangeHandler.dataStructure.row, [
         {
             startDate: new Date(2015, 1, 0),
-            endDate: new Date(2015, 2, 0)
+            endDate: new Date(2015, 2, 0),
+            name: "test3"
         }
     ]);
     data.Rows.push(row3);
 
     var boundView = templatr.bind("calendar", data);
     document.getElementById("content").appendChild(boundView);
-
+    try {
+        var t2 = window.performance.now();
+    } catch (ex) {
+        var t2 = new Date().getTime();
+    }
+    document.getElementById("initialLoad").innerText = setAverage(1, (t2 - t1));
     var self = this;
 
     var counter = 0;
     setInterval(function () {
+        try {
+            var t1 = window.performance.now();
+        } catch (ex) {
+            var t1 = new Date().getTime();
+        }
         if (counter === 0) {
             counter = 1;
             data.Rows = [];
@@ -80,7 +114,8 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var row1 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
                     startDate: new Date(2015, 0, 10),
-                    endDate: new Date(2015, 1, 0)
+                    endDate: new Date(2015, 1, 0),
+                    name: "test4"
                 }
             ]);
             data.Rows.push(row1);
@@ -88,7 +123,8 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var row2 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
                     startDate: new Date(2015, 1, 0),
-                    endDate: new Date(2015, 2, 0)
+                    endDate: new Date(2015, 2, 0),
+                    name: "test5"
                 }
             ]);
             data.Rows.push(row2);
@@ -96,7 +132,8 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var row3 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
                     startDate: new Date(2015, 0, 1),
-                    endDate: new Date(2015, 1, 0)
+                    endDate: new Date(2015, 1, 0),
+                    name: "test6"
                 }
             ]);
             data.Rows.push(row3);
@@ -107,7 +144,8 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var row1 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
                     startDate: new Date(2015, 0, 1),
-                    endDate: new Date(2015, 1, 0)
+                    endDate: new Date(2015, 1, 0),
+                    name: "test7"
                 }
             ]);
             data.Rows.push(row1);
@@ -115,7 +153,8 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var row2 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
                     startDate: new Date(2015, 0, 10),
-                    endDate: new Date(2015, 1, 0)
+                    endDate: new Date(2015, 1, 0),
+                    name: "test8"
                 }
             ]);
             data.Rows.push(row2);
@@ -123,13 +162,20 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var row3 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
                     startDate: new Date(2015, 1, 0),
-                    endDate: new Date(2015, 2, 0)
+                    endDate: new Date(2015, 2, 0),
+                    name: "test9"
                 }
             ]);
             data.Rows.push(row3);
         }
         templatr.updateDataModel(data);
-    }, 100);
+        try {
+            var t2 = window.performance.now();
+        } catch (ex) {
+            var t2 = new Date().getTime();
+        }
+        document.getElementById("updateAverage").innerText = setAverage(1, (t2 - t1));
+    }, 5000);
 };
 
 Main.prototype.MakeRow = function (rowTemplate, highlights) {
