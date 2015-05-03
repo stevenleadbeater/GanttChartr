@@ -21,7 +21,8 @@ RowController.prototype.SpliceData = function () {
                 {
                     name: highlight.name,
                     className: "highlight",
-                    width: "width: " + ((this.GetDaysBetween(highlight.startDate, highlight.endDate)*21) - 5) + "px;"
+                    width: "width: " + ((this.GetDaysBetween(highlight.startDate, highlight.endDate)*21) - 5) + "px;",
+                    numberOfDays: this.GetDaysBetween(highlight.startDate, highlight.endDate)
                 }];
             } else {
                 day.highlight = " ";
@@ -29,7 +30,8 @@ RowController.prototype.SpliceData = function () {
                 {
                     name: "",
                     className: "",
-                    width:""
+                    width:"",
+                    numberOfDays: ""
                 }];
             }
             if (highlight.endDate === dayDate) {

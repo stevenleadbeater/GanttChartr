@@ -181,6 +181,8 @@ Templatr.prototype.bindRepeater = function (repeater, data, dataAccessor) {
     //Save the binding reference in the repeaters array of references
     this.bindings[dataAccessor] = this.bindings[dataAccessor] || [];
     this.bindings[dataAccessor].push(bindingLog);
+
+    this.AddDataAccesorToElement(returnValue, dataAccessor);
     //}
     //The top level repeater has no starting namespace this.bindings[""] to access it's bindings
     if (dataAccessor != "") {
@@ -219,6 +221,11 @@ Templatr.prototype.bindRepeater = function (repeater, data, dataAccessor) {
         }
     }
     return returnValue;
+};
+
+Templatr.prototype.AddDataAccesorToElement = function (element, dataAccessor) {
+
+    element.setAttribute("data-accesor", dataAccessor);
 };
 
 Templatr.prototype.bindElement = function (element, data, dataAccessor) {
@@ -291,6 +298,8 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
 
     //Save the binding reference in the repeaters array of references
     this.bindings[dataAccessor] = bindingLog;
+
+    this.AddDataAccesorToElement(element, dataAccessor);
 
     //}
 

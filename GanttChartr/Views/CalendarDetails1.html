@@ -2,7 +2,7 @@
     <repeater class="calendarDetails1Row" datasource="<%# days %>">
         <span class="calendarDetails1DayName">
             <repeater datasource="<%# events %>">
-                <span class="<%# className %>" style="<%# width %>"><%# name %></span>
+                <span class="<%# className %>" style="<%# width %>" data-number-of-days="<%# numberOfDays %>"><%# name %></span>
             </repeater>
         </span>
     </repeater>
