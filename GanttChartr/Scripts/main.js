@@ -56,39 +56,70 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     templatr.addView("header", headerView);
     templatr.addView("detail", detailView);
 
-    var dateRangeHandler = new DateRangeHandler(new Date(2015, 0, 1), new Date(2015, 7, 1));
+    var dateRangeHandler = new DateRangeHandler(new Date(2015, 0, 1), new Date(2015, 3, 0));
     dateRangeHandler.GenerateDataStructure();
 
     var data = {};
     data.Header = dateRangeHandler.dataStructure.Header;
     data.Rows = [];
 
-    var row1 = this.MakeRow(dateRangeHandler.dataStructure.row, [
-        {
+
+    var eventController = new EventController(dateRangeHandler);
+    eventController.LoadData([
+    {
+        startDate: new Date(2015, 0, 1),
+        endDate: new Date(2015, 1, 0),
+        displayText: "parent",
+        id: "1",
+        toolTip: "parent tip",
+        isCalculated: true,
+        children: [{
             startDate: new Date(2015, 0, 1),
             endDate: new Date(2015, 1, 0),
-            name: "test1"
-        }
-    ]);
-    data.Rows.push(row1);
-
-    var row2 = this.MakeRow(dateRangeHandler.dataStructure.row, [
-        {
-            startDate: new Date(2015, 0, 10),
-            endDate: new Date(2015, 1, 0),
-            name: "test2"
-        }
-    ]);
-    data.Rows.push(row2);
-
-    var row3 = this.MakeRow(dateRangeHandler.dataStructure.row, [
-        {
-            startDate: new Date(2015, 1, 0),
+            displayText: "child 1",
+            id: "1.1",
+            toolTip: "child 1 tip",
+            isCalculated: false,
+            children: []
+        }, {
+            startDate: new Date(2015, 1, 1),
             endDate: new Date(2015, 2, 0),
-            name: "test3"
-        }
-    ]);
-    data.Rows.push(row3);
+            displayText: "child 2",
+            id: "1.2",
+            toolTip: "child 2 tip",
+            isCalculated: false,
+            children: []
+        }]
+    }]);
+
+    data.Rows = eventController.rows;
+
+    //var row1 = this.MakeRow(dateRangeHandler.dataStructure.row, [
+    //    {
+    //        startDate: new Date(2015, 0, 1),
+    //        endDate: new Date(2015, 1, 0),
+    //        name: "test1"
+    //    }
+    //]);
+    //data.Rows.push(row1);
+
+    //var row2 = this.MakeRow(dateRangeHandler.dataStructure.row, [
+    //    {
+    //        startDate: new Date(2015, 0, 10),
+    //        endDate: new Date(2015, 1, 0),
+    //        name: "test2"
+    //    }
+    //]);
+    //data.Rows.push(row2);
+
+    //var row3 = this.MakeRow(dateRangeHandler.dataStructure.row, [
+    //    {
+    //        startDate: new Date(2015, 1, 1),
+    //        endDate: new Date(2015, 2, 0),
+    //        name: "test3"
+    //    }
+    //]);
+    //data.Rows.push(row3);
 
     var boundView = templatr.bind("calendar", data);
     document.getElementById("content").appendChild(boundView);
@@ -122,7 +153,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
 
             var row2 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
-                    startDate: new Date(2015, 1, 0),
+                    startDate: new Date(2015, 1, 1),
                     endDate: new Date(2015, 2, 0),
                     name: "test5"
                 }
@@ -161,7 +192,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
 
             var row3 = self.MakeRow(dateRangeHandler.dataStructure.row, [
                 {
-                    startDate: new Date(2015, 1, 0),
+                    startDate: new Date(2015, 1, 1),
                     endDate: new Date(2015, 2, 0),
                     name: "test9"
                 }
