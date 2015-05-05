@@ -94,33 +94,6 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
 
     data.Rows = eventController.rows;
 
-    //var row1 = this.MakeRow(dateRangeHandler.dataStructure.row, [
-    //    {
-    //        startDate: new Date(2015, 0, 1),
-    //        endDate: new Date(2015, 1, 0),
-    //        name: "test1"
-    //    }
-    //]);
-    //data.Rows.push(row1);
-
-    //var row2 = this.MakeRow(dateRangeHandler.dataStructure.row, [
-    //    {
-    //        startDate: new Date(2015, 0, 10),
-    //        endDate: new Date(2015, 1, 0),
-    //        name: "test2"
-    //    }
-    //]);
-    //data.Rows.push(row2);
-
-    //var row3 = this.MakeRow(dateRangeHandler.dataStructure.row, [
-    //    {
-    //        startDate: new Date(2015, 1, 1),
-    //        endDate: new Date(2015, 2, 0),
-    //        name: "test3"
-    //    }
-    //]);
-    //data.Rows.push(row3);
-
     var boundView = templatr.bind("calendar", data);
     document.getElementById("content").appendChild(boundView);
     try {
@@ -129,7 +102,6 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
         var t2 = new Date().getTime();
     }
     document.getElementById("initialLoad").innerText = setAverage(1, (t2 - t1));
-    var self = this;
 
     var counter = 0;
     setInterval(function () {
