@@ -142,62 +142,66 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             counter = 1;
             data.Rows = [];
 
-            var row1 = self.MakeRow(dateRangeHandler.dataStructure.row, [
-                {
-                    startDate: new Date(2015, 0, 10),
-                    endDate: new Date(2015, 1, 0),
-                    name: "test4"
-                }
-            ]);
-            data.Rows.push(row1);
-
-            var row2 = self.MakeRow(dateRangeHandler.dataStructure.row, [
-                {
-                    startDate: new Date(2015, 1, 1),
-                    endDate: new Date(2015, 2, 0),
-                    name: "test5"
-                }
-            ]);
-            data.Rows.push(row2);
-
-            var row3 = self.MakeRow(dateRangeHandler.dataStructure.row, [
-                {
+            var eventController = new EventController(dateRangeHandler);
+            eventController.LoadData([
+            {
+                startDate: new Date(2015, 0, 1),
+                endDate: new Date(2015, 1, 0),
+                displayText: "parent",
+                id: "1",
+                toolTip: "parent tip",
+                isCalculated: true,
+                children: [{
                     startDate: new Date(2015, 0, 1),
                     endDate: new Date(2015, 1, 0),
-                    name: "test6"
-                }
-            ]);
-            data.Rows.push(row3);
+                    displayText: "child 1",
+                    id: "1.1",
+                    toolTip: "child 1 tip",
+                    isCalculated: false,
+                    children: []
+                }, {
+                    startDate: new Date(2015, 1, 1),
+                    endDate: new Date(2015, 1, 20),
+                    displayText: "child 2",
+                    id: "1.2",
+                    toolTip: "child 2 tip",
+                    isCalculated: false,
+                    children: []
+                }]
+            }]);
+            data.Rows = eventController.rows;
         } else {
             counter = 0;
             data.Rows = [];
 
-            var row1 = self.MakeRow(dateRangeHandler.dataStructure.row, [
-                {
+            var eventController = new EventController(dateRangeHandler);
+            eventController.LoadData([
+            {
+                startDate: new Date(2015, 0, 1),
+                endDate: new Date(2015, 1, 0),
+                displayText: "parent",
+                id: "1",
+                toolTip: "parent tip",
+                isCalculated: true,
+                children: [{
                     startDate: new Date(2015, 0, 1),
                     endDate: new Date(2015, 1, 0),
-                    name: "test7"
-                }
-            ]);
-            data.Rows.push(row1);
-
-            var row2 = self.MakeRow(dateRangeHandler.dataStructure.row, [
-                {
-                    startDate: new Date(2015, 0, 10),
-                    endDate: new Date(2015, 1, 0),
-                    name: "test8"
-                }
-            ]);
-            data.Rows.push(row2);
-
-            var row3 = self.MakeRow(dateRangeHandler.dataStructure.row, [
-                {
+                    displayText: "child 1",
+                    id: "1.1",
+                    toolTip: "child 1 tip",
+                    isCalculated: false,
+                    children: []
+                }, {
                     startDate: new Date(2015, 1, 1),
                     endDate: new Date(2015, 2, 0),
-                    name: "test9"
-                }
-            ]);
-            data.Rows.push(row3);
+                    displayText: "child 2",
+                    id: "1.2",
+                    toolTip: "child 2 tip",
+                    isCalculated: false,
+                    children: []
+                }]
+            }]);
+            data.Rows = eventController.rows;
         }
         templatr.updateDataModel(data);
         try {
