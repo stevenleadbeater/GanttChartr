@@ -1,9 +1,9 @@
-﻿<repeater>
-    <repeater class="calendarDetails1Row" datasource="<%# days %>">
+﻿<div data-repeater="templatr">
+    <div data-repeater="templatr" class="calendarDetails1Row" datasource="{{ days }}">
         <span class="calendarDetails1DayName">
-            <repeater datasource="<%# events %>">
-                <span class="<%# className %>" style="<%# width %>" data-number-of-days="<%# numberOfDays %>"><%# name %></span>
-            </repeater>
+            <span data-repeater="templatr" datasource="{{ events }}">
+                <span class="{{ className }}" style="{{ width }}" data-number-of-days="{{ numberOfDays }}">{{ name }}</span>
+            </span>
         </span>
-    </repeater>
-</repeater>
+    </div>
+</div>

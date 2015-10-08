@@ -1,13 +1,13 @@
-﻿<repeater datasource="<%# years %>" class="calendarHeader1Layout">
+﻿<div data-repeater="templatr" datasource="{{ years }}" class="calendarHeader1Layout">
     <div class="calendarHeader1Layout">
-        <div class="calendarHeader1YearName"><%# yearName %></div>
-        <repeater datasource="<%# months %>" class="calendarHeader1Layout">
+        <div class="calendarHeader1YearName">{{ yearName }}</div>
+        <div data-repeater="templatr" datasource="{{ months }}" class="calendarHeader1Layout">
             <div class="calendarHeader1Layout calendarHeader1AlignmentFix">
-                <div class="calendarHeader1MonthName"><%# monthName %></div>
-                <repeater datasource="<%# days %>" class="calendarHeader1Layout">
-                    <span class="calendarHeader1DayName"><%# dayName %></span>
-                </repeater>
+                <div class="calendarHeader1MonthName">{{ monthName }}</div>
+                <div data-repeater="templatr" datasource="{{ days }}" class="calendarHeader1Layout">
+                    <span class="calendarHeader1DayName">{{ dayName }}</span>
+                </div>
             </div>
-        </repeater>
+        </div>
     </div>
-</repeater>
+</div>

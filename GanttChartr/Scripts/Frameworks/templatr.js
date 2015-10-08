@@ -13,7 +13,6 @@
     iii. dataAccessor (fully namespaced index using array indexes as namespaces too)
     iv. the repeater element used for the binding
     v. type property which is set to "repeater"
-
     Elements create a single entry as an object with properties:
     1. dataAccessor (fully namespaced index using array indexes as namespaces too)
     2. element used for the binding (from template)
@@ -43,10 +42,10 @@
 
     /*
     This is the regex pattern used to indentify the binding statements. Change at will, 
-    the start tag is <%#, the end tag is %> replace those 2 below with whatever you please.
-    eg. /{{([^%>]*)}}/ for mustache style statements.
+    the start tag is {{, the end tag is }} replace those 2 below with whatever you please.
+    eg. /{{([^}}]*)}}/ for mustache style statements.
     */
-    this.Pattern = /<%#([^%>]*)%>/;
+    this.Pattern = /{{([^}}]*)}}/;
 
     this.parentOfTopLevel = null;
 
@@ -79,7 +78,7 @@ Templatr.prototype.bindTemplate = function (template, data, dataAccessor) {
     for (var i = 0, len = HtmlParser.children.length; i < len; i++) {
 
         var child = HtmlParser.children[i];
-        if (child.tagName == "REPEATER" || child.tagName == "SELECT" || child.tagName == "UL" || child.tagName == "TR" || child.tagName == "TBODY") {
+        if (typeof child.attributes["data-repeater"] !== "undefined" && child.attributes["data-repeater"].value === "templatr") {
             //bind repeater
             //This is the property name of an array
             var dataSource = this.Pattern.exec(child.getAttribute("DataSource"));
@@ -150,14 +149,10 @@ Templatr.prototype.bindRepeater = function (repeater, data, dataAccessor) {
             this.copyAttributes(returnValue, repeater);
             makeLog = true;
             break;
-        case "REPEATER":
-        case "repeater":
+        default:
             returnValue = document.createElement("div");
             this.copyAttributes(returnValue, repeater);
             makeLog = true;
-            break;
-        default:
-            returnValue = document.createDocumentFragment();
             break;
     }
 
@@ -197,7 +192,7 @@ Templatr.prototype.bindRepeater = function (repeater, data, dataAccessor) {
         for (var j = 0, lenJ = children.length; j < lenJ; j++) {
 
             //Bind the child to the model
-            if (children[j].tagName == "REPEATER" || children[j].tagName == "SELECT" || children[j].tagName == "UL" || children[j].tagName == "TR" || children[j].tagName == "TBODY") {
+            if (typeof children[j].attributes["data-repeater"] !== "undefined" && children[j].attributes["data-repeater"].value === "templatr") {
 
                 //This is the property name of an array
                 var dataSource = this.Pattern.exec(children[j].getAttribute("DataSource"));
@@ -252,8 +247,8 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
                 &&
                 attrib.name === "datasource") {
 
-                /*trim - ie8 compatible allows <%# prop_name %> and <%#prop_name%> to be used interchangably and mixed
-                index 1 of the regex exec return is what is found between the '<%#' and '%>'*/
+                /*trim - ie8 compatible allows {{ prop_name }} and {{prop_name}} to be used interchangably and mixed
+                index 1 of the regex exec return is what is found between the '{{' and '}}'*/
                 var propertyName = propertyToBind[1].replace(/^\s+|\s+$/gm, "");
 
                 element.appendChild(this.bindTemplate(viewIdAttribute, data[propertyName], dataAccessor + "." + propertyName));
@@ -263,24 +258,26 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
                 didBind = true;
 
                 //ie fix for select options display text
-                if (attrib.name === "value" && element.childNodes.length === 0) {
+                if (element.tagName === "OPTION" && attrib.name === "value" && element.childNodes.length === 0) {
                     element.appendChild(this.bindingReplacementNodeValue(temp, data, dataAccessor, "innerText"));
                 }
             }
         }
     }
-    if (len == 0) {
+    if (len === 0) {
 
         // Check for binding statements and process as applicable            
         var textNode = element.childNodes[0];
+        var nodeValue = null;
+
         if (textNode && this.Pattern.exec(textNode.nodeValue) != null) {
-            var nodeValue = textNode.nodeValue;
-            element.removeChild(element.childNodes[0]);
-            element.appendChild(this.bindingReplacementNodeValue(nodeValue, data, dataAccessor, "innerText"));
-            didBind = true;
+            nodeValue = textNode.nodeValue;
             //The else condition is a hack to make IE work (it strips the default binding pattern from the text content / node value and every other property besides text)
         } else if (textNode && typeof textNode.text !== "undefined" && this.Pattern.exec(textNode.text) != null) {
-            var nodeValue = textNode.text;
+            nodeValue = textNode.text;
+        }
+
+        if (nodeValue != null) {
             element.removeChild(element.childNodes[0]);
             element.appendChild(this.bindingReplacementNodeValue(nodeValue, data, dataAccessor, "innerText"));
             didBind = true;
@@ -299,7 +296,7 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
     //Save the binding reference in the repeaters array of references
     this.bindings[dataAccessor] = bindingLog;
 
-    this.AddDataAccesorToElement(element, dataAccessor);
+    this.AddDataAccesorToElement(element, bindingLog.dataAccessor);
 
     //}
 
@@ -311,7 +308,7 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
 
             //Sub repeater support
             var child = element.children[i];
-            if (child.tagName == "REPEATER" || child.tagName == "SELECT" || child.tagName == "UL" || child.tagName == "TR" || child.tagName == "TBODY") {
+            if (typeof child.attributes["data-repeater"] !== "undefined" && child.attributes["data-repeater"].value === "templatr") {
 
                 //This is the property name of an array
                 var dataSource = this.Pattern.exec(child.getAttribute("DataSource"));
@@ -331,7 +328,7 @@ Templatr.prototype.bindElement = function (element, data, dataAccessor) {
                     }
 
                 } else if (Object.prototype.toString.call(data) === "[object Array]") {
-                    var topLevelRepeaterResult = this.bindRepeater(child, data, dataAccessor);
+                    var topLevelRepeaterResult = this.bindRepeater(child, data, dataAccessor + ".");
 
                     //Swap the template element for the bound element
                     element.replaceChild(topLevelRepeaterResult, child);
@@ -360,16 +357,16 @@ Templatr.prototype.bindingReplacement = function (stringToReplaceIn, data, dataA
             break;
         }
 
-        /*trim - ie8 compatible allows <%# prop_name %> and <%#prop_name%> to be used interchangably and mixed
-        index 1 of the regex exec return is what is found between the '<%#' and '%>'*/
+        /*trim - ie8 compatible allows {{ prop_name }} and {{prop_name}} to be used interchangably and mixed
+        index 1 of the regex exec return is what is found between the '{{' and '}}'*/
         var propertyName = propertyToBind[1].replace(/^\s+|\s+$/gm, "");
 
-        /*We have to replace the full databinding statement of '<%#', '%>' and whatever is inbetween. This
+        /*We have to replace the full databinding statement of '{{', '}}' and whatever is inbetween. This
         is index 0 of the result of the regex exec*/
         var targetForReplacement = propertyToBind[0];
 
         //We can't bind to a property that isn't at the right level in the data. Check and error on fail
-        var sourceData = typeof data[propertyName] !== "undefined" ? data[propertyName].toString() : null;
+        var sourceData = typeof data[propertyName] !== "undefined" && data[propertyName] !== null ? data[propertyName].toString() : null;
         if (sourceData) {
 
             stringToReplaceIn = stringToReplaceIn.replace(targetForReplacement, sourceData);
@@ -382,16 +379,7 @@ Templatr.prototype.bindingReplacement = function (stringToReplaceIn, data, dataA
             this.bindings[dataAccessor + "." + propertyName] = bindingLog;
 
         } else {
-            //Log as much trace information as possible
-            //console.log("Throwing error because property '" + propertyName + "' was not found in data: ");
-            //console.log(data);
-            //console.log("String to replace in:");
-            //console.log(stringToReplaceIn);
-            //console.log("Target for replacement:");
-            //console.log(targetForReplacement);
 
-            //Throw an error
-            //throw new Error('Cannot bind property ' + propertyName);
             stringToReplaceIn = "";
 
             var bindingLog = this.createBindingReference(this.namespace + this.currentElementId, "bindingReplacement", dataAccessor + "." + propertyName);
@@ -420,11 +408,11 @@ Templatr.prototype.bindingReplacementNodeValue = function (stringToReplaceIn, da
             break;
         }
 
-        /*trim - ie8 compatible allows <%# prop_name %> and <%#prop_name%> to be used interchangably and mixed
-        index 1 of the regex exec return is what is found between the '<%#' and '%>'*/
+        /*trim - ie8 compatible allows {{ prop_name }} and {{prop_name}} to be used interchangably and mixed
+        index 1 of the regex exec return is what is found between the '{{' and '}}'*/
         var propertyName = propertyToBind[1].replace(/^\s+|\s+$/gm, "");
 
-        /*We have to replace the full databinding statement of '<%#', '%>' and whatever is inbetween. This
+        /*We have to replace the full databinding statement of '{{', '}}' and whatever is inbetween. This
         is index 0 of the result of the regex exec*/
         var targetForReplacement = propertyToBind[0];
 
@@ -434,7 +422,7 @@ Templatr.prototype.bindingReplacementNodeValue = function (stringToReplaceIn, da
 
             //Account for line breaks
             if (typeof sourceData === "string" && sourceData.indexOf("<br") != -1) {
-                var paragraphs = sourceData.split(/<br([^%>]*)\/>/),
+                var paragraphs = sourceData.split(/<br([^}}]*)\/>/),
                     length = paragraphs.length;
                 for (var index = 0; index < length; index++) {
 
@@ -463,16 +451,7 @@ Templatr.prototype.bindingReplacementNodeValue = function (stringToReplaceIn, da
             this.bindings[dataAccessor + "." + propertyName] = bindingLog;
 
         } else {
-            //Log as much trace information as possible
-            //console.log("Throwing error because property '" + propertyName + "' was not found in data: ");
-            //console.log(data);
-            //console.log("String to replace in:");
-            //console.log(stringToReplaceIn);
-            //console.log("Target for replacement:");
-            //console.log(targetForReplacement);
 
-            //Throw an error
-            //throw new Error('Cannot bind property ' + propertyName);
             stringToReplaceIn = "";
 
             var bindingLog = this.createBindingReference(this.namespace + this.currentElementId, "bindingReplacement", dataAccessor + "." + propertyName);
@@ -525,7 +504,7 @@ Templatr.prototype.addToRepeater = function (repeater, data, dataAccessor) {
     for (var j = 0, lenJ = children.length; j < lenJ; j++) {
 
         var element;
-        if (children[j].tagName === "REPEATER" || children[j].tagName === "SELECT" || children[j].tagName === "UL" || children[j].tagName === "TR" || children[j].tagName === "TBODY") {
+        if (typeof children[j].attributes["data-repeater"] !== "undefined" && children[j].attributes["data-repeater"].value === "templatr") {
 
             //This is the property name of an array
             var dataSource = this.Pattern.exec(children[j].getAttribute("DataSource"));
