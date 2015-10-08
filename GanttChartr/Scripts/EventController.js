@@ -51,7 +51,7 @@ EventController.prototype.processData = function (item, dataAccessor) {
 
     var blocks = [];
 
-    if (item.isCalculated) {
+    if (item.isCalculated && !item.showGapsFromChildren) {
         startDate = this.levelStart;
         endDate = this.levelEnd;
 
@@ -62,7 +62,11 @@ EventController.prototype.processData = function (item, dataAccessor) {
             toolTip: item.toolTip,
             id: item.id
         });
-    } else {
+    } else if (item.isCalculated && item.showGapsFromChildren) {
+
+        blocks = item.children[0].blocks;
+    }
+    else {
         for(var i = 0, len = item.blocks.length; i < len; i ++)
         {
             blocks.push({

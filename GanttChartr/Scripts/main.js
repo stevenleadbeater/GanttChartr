@@ -71,6 +71,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
         id: "1",
         toolTip: "parent tip",
         isCalculated: true,
+        showGapsFromChildren: true,
         children: [{
             blocks: [
                 {
@@ -108,6 +109,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
         id: "1",
         toolTip: "parent tip",
         isCalculated: true,
+        showGapsFromChildren: true,
         children: [{
             blocks: [
                 {
@@ -170,6 +172,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 id: "1",
                 toolTip: "parent tip",
                 isCalculated: true,
+                showGapsFromChildren: true,
                 children: [{
                     blocks: [
                         {
@@ -199,6 +202,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 id: "1",
                 toolTip: "parent tip",
                 isCalculated: true,
+                showGapsFromChildren: true,
                 children: [{
                     blocks: [
                         {
@@ -235,6 +239,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 id: "1",
                 toolTip: "parent tip",
                 isCalculated: true,
+                showGapsFromChildren: true,
                 children: [{
                     blocks: [
                         {
@@ -264,6 +269,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 id: "1",
                 toolTip: "parent tip",
                 isCalculated: true,
+                showGapsFromChildren: true,
                 children: [{
                     blocks: [
                         {
