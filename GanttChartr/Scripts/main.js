@@ -67,23 +67,72 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     var eventController = new EventController(dateRangeHandler);
     eventController.LoadData([
     {
-        startDate: new Date(2015, 0, 1),
-        endDate: new Date(2015, 1, 0),
         displayText: "parent",
         id: "1",
         toolTip: "parent tip",
         isCalculated: true,
         children: [{
-            startDate: new Date(2015, 0, 1),
-            endDate: new Date(2015, 1, 0),
+            blocks: [
+                {
+                    startDate: new Date(2015, 0, 1),
+                    endDate: new Date(2015, 1, 0)
+                },
+                {
+                    startDate: new Date(2015, 2, 1),
+                    endDate: new Date(2015, 3, 0)
+                }],
             displayText: "child 1",
             id: "1.1",
             toolTip: "child 1 tip",
             isCalculated: false,
             children: []
         }, {
-            startDate: new Date(2015, 1, 1),
-            endDate: new Date(2015, 2, 0),
+            blocks: [
+                {
+                    startDate: new Date(2015, 0, 1),
+                    endDate: new Date(2015, 1, 0)
+                },
+                {
+                    startDate: new Date(2015, 2, 1),
+                    endDate: new Date(2015, 3, 0)
+                }],
+            displayText: "child 2",
+            id: "1.2",
+            toolTip: "child 2 tip",
+            isCalculated: false,
+            children: []
+        }]
+    },
+    {
+        displayText: "parent",
+        id: "1",
+        toolTip: "parent tip",
+        isCalculated: true,
+        children: [{
+            blocks: [
+                {
+                    startDate: new Date(2015, 0, 1),
+                    endDate: new Date(2015, 1, 0)
+                },
+                {
+                    startDate: new Date(2015, 2, 1),
+                    endDate: new Date(2015, 3, 0)
+                }],
+            displayText: "child 1",
+            id: "1.1",
+            toolTip: "child 1 tip",
+            isCalculated: false,
+            children: []
+        }, {
+            blocks: [
+                {
+                    startDate: new Date(2015, 0, 1),
+                    endDate: new Date(2015, 1, 0)
+                },
+                {
+                    startDate: new Date(2015, 2, 1),
+                    endDate: new Date(2015, 3, 0)
+                }],
             displayText: "child 2",
             id: "1.2",
             toolTip: "child 2 tip",
@@ -117,23 +166,56 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var eventController = new EventController(dateRangeHandler);
             eventController.LoadData([
             {
-                startDate: new Date(2015, 0, 1),
-                endDate: new Date(2015, 1, 0),
                 displayText: "parent",
                 id: "1",
                 toolTip: "parent tip",
                 isCalculated: true,
                 children: [{
-                    startDate: new Date(2015, 0, 1),
-                    endDate: new Date(2015, 1, 0),
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 0, 1),
+                            endDate: new Date(2015, 1, 0)
+                        }],
                     displayText: "child 1",
                     id: "1.1",
                     toolTip: "child 1 tip",
                     isCalculated: false,
                     children: []
                 }, {
-                    startDate: new Date(2015, 1, 1),
-                    endDate: new Date(2015, 1, 20),
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 1, 1),
+                            endDate: new Date(2015, 1, 20)
+                        }],
+                    displayText: "child 2",
+                    id: "1.2",
+                    toolTip: "child 2 tip",
+                    isCalculated: false,
+                    children: []
+                }]
+            },
+            {
+                displayText: "parent",
+                id: "1",
+                toolTip: "parent tip",
+                isCalculated: true,
+                children: [{
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 0, 1),
+                            endDate: new Date(2015, 1, 0)
+                        }],
+                    displayText: "child 1",
+                    id: "1.1",
+                    toolTip: "child 1 tip",
+                    isCalculated: false,
+                    children: []
+                }, {
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 1, 1),
+                            endDate: new Date(2015, 1, 20)
+                        }],
                     displayText: "child 2",
                     id: "1.2",
                     toolTip: "child 2 tip",
@@ -149,23 +231,56 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             var eventController = new EventController(dateRangeHandler);
             eventController.LoadData([
             {
-                startDate: new Date(2015, 0, 1),
-                endDate: new Date(2015, 1, 0),
                 displayText: "parent",
                 id: "1",
                 toolTip: "parent tip",
                 isCalculated: true,
                 children: [{
-                    startDate: new Date(2015, 0, 1),
-                    endDate: new Date(2015, 1, 0),
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 0, 1),
+                            endDate: new Date(2015, 1, 0)
+                        }],
                     displayText: "child 1",
                     id: "1.1",
                     toolTip: "child 1 tip",
                     isCalculated: false,
                     children: []
                 }, {
-                    startDate: new Date(2015, 1, 1),
-                    endDate: new Date(2015, 2, 0),
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 2, 1),
+                            endDate: new Date(2015, 3, 0)
+                        }],
+                    displayText: "child 2",
+                    id: "1.2",
+                    toolTip: "child 2 tip",
+                    isCalculated: false,
+                    children: []
+                }]
+            },
+            {
+                displayText: "parent",
+                id: "1",
+                toolTip: "parent tip",
+                isCalculated: true,
+                children: [{
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 0, 1),
+                            endDate: new Date(2015, 1, 0)
+                        }],
+                    displayText: "child 1",
+                    id: "1.1",
+                    toolTip: "child 1 tip",
+                    isCalculated: false,
+                    children: []
+                }, {
+                    blocks: [
+                        {
+                            startDate: new Date(2015, 2, 1),
+                            endDate: new Date(2015, 3, 0)
+                        }],
                     displayText: "child 2",
                     id: "1.2",
                     toolTip: "child 2 tip",
@@ -175,7 +290,13 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             }]);
             data.Rows = eventController.rows;
         }
-        templatr.updateDataModel(data);
+
+        document.getElementById("content").removeChild(document.getElementById("content").firstChild);
+
+        var boundView = templatr.bind("calendar", data);
+        document.getElementById("content").appendChild(boundView);
+
+        //templatr.updateDataModel(data);
         try {
             var t2 = window.performance.now();
         } catch (ex) {

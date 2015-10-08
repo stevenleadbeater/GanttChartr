@@ -43,22 +43,32 @@ EventController.prototype.processData = function (item, dataAccessor) {
     var startDate,
         endDate;
 
+    var blocks = [];
+
     if (item.isCalculated) {
         startDate = this.levelStart;
         endDate = this.levelEnd;
-    } else {
-        startDate = item.startDate;
-        endDate = item.endDate;
-    }
-    var row = this.MakeRow(this.dateRangeHandler.dataStructure.row, [
-        {
+
+        blocks.push({
             startDate: startDate,
             endDate: endDate,
             name: item.displayText,
             toolTip: item.toolTip,
             id: item.id
+        });
+    } else {
+        for(var i = 0; i < item.blocks.length; i ++)
+        {
+            blocks.push({
+                startDate: item.blocks[i].startDate,
+                endDate: item.blocks[i].endDate,
+                name: item.displayText,
+                toolTip: item.toolTip,
+                id: item.id
+            });
         }
-    ]);
+    }
+    var row = this.MakeRow(this.dateRangeHandler.dataStructure.row, blocks);
 
     rows.push(row);
 

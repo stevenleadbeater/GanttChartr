@@ -13,26 +13,25 @@ RowController.prototype.SpliceData = function () {
         for (var dayIndex = 0, dayCount = this.rowTemplate.days.length; dayIndex < dayCount; dayIndex++) {
 
             var day = this.rowTemplate.days[dayIndex];
+            day.events = typeof day.events !== "undefined" ? day.events : [];
             var dayDate = new Date(day.yearName, day.monthName, day.dayName);
             if (lastDayWasAHighlight === false && highlight.startDate <= dayDate && highlight.endDate >= dayDate) {
                 lastDayWasAHighlight = true;
-                day.highlight = "highlight";
-                day.events = [
-                {
+                day.highlight = " ";
+                day.events.push({
                     name: highlight.name,
                     className: "highlight",
                     width: "width: " + ((this.GetDaysBetween(highlight.startDate, highlight.endDate)*21) - 5) + "px;",
                     numberOfDays: this.GetDaysBetween(highlight.startDate, highlight.endDate)
-                }];
+                });
             } else {
                 day.highlight = " ";
-                day.events = [
-                {
+                day.events.push({
                     name: "",
                     className: "",
                     width:"",
                     numberOfDays: ""
-                }];
+                });
             }
             if (highlight.endDate === dayDate) {
                 lastDayWasAHighlight = false;
