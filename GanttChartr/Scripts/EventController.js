@@ -21,11 +21,17 @@ EventController.prototype.LoadData = function (data) {
 
 EventController.prototype.preProcessData = function (target) {
 
-    if (target.startDate < this.levelStart || this.levelStart === null) {
-        this.levelStart = target.startDate;
-    }
-    if (target.endDate > this.levelEnd || this.levelEnd === null) {
-        this.levelEnd = target.endDate;
+    if (target.isCalculated === false) {
+
+        for (var i = 0, len = target.blocks.length; i < len; i++) {
+
+            if (target.blocks[i].startDate < this.levelStart || this.levelStart === null) {
+                this.levelStart = target.blocks[i].startDate;
+            }
+            if (target.blocks[i].endDate > this.levelEnd || this.levelEnd === null) {
+                this.levelEnd = target.blocks[i].endDate;
+            }
+        }
     }
 };
 
@@ -57,7 +63,7 @@ EventController.prototype.processData = function (item, dataAccessor) {
             id: item.id
         });
     } else {
-        for(var i = 0; i < item.blocks.length; i ++)
+        for(var i = 0, len = item.blocks.length; i < len; i ++)
         {
             blocks.push({
                 startDate: item.blocks[i].startDate,
