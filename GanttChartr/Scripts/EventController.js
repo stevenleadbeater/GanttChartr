@@ -65,6 +65,13 @@ EventController.prototype.processData = function (item, dataAccessor) {
     } else if (item.isCalculated && item.showGapsFromChildren) {
 
         blocks = item.children[0].blocks;
+        for (var childIndex = 1, numberOfChildren = item.children.length; childIndex < numberOfChildren; childIndex++) {
+
+            for (var blockIndex = 0, numberOfBlocks = item.children[childIndex].blocks.length; blockIndex < numberOfBlocks; blockIndex++) {
+
+
+            }
+        }
     }
     else {
         for(var i = 0, len = item.blocks.length; i < len; i ++)
