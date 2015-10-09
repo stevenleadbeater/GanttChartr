@@ -161,6 +161,11 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
         } catch (ex) {
             var t1 = new Date().getTime();
         }
+
+        var data = {};
+        data.Header = dateRangeHandler.dataStructure.Header;
+        data.Rows = []; 
+
         if (counter === 0) {
             counter = 1;
             data.Rows = [];
@@ -297,12 +302,12 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
             data.Rows = eventController.rows;
         }
 
-        document.getElementById("content").removeChild(document.getElementById("content").firstChild);
+        //document.getElementById("content").removeChild(document.getElementById("content").firstChild);
 
-        var boundView = templatr.bind("calendar", data);
-        document.getElementById("content").appendChild(boundView);
+        //var boundView = templatr.bind("calendar", data);
+        //document.getElementById("content").appendChild(boundView);
 
-        //templatr.updateDataModel(data);
+        templatr.updateDataModel(data);
         try {
             var t2 = window.performance.now();
         } catch (ex) {

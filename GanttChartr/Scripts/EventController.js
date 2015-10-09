@@ -67,9 +67,23 @@ EventController.prototype.processData = function (item, dataAccessor) {
         blocks = item.children[0].blocks;
         for (var childIndex = 1, numberOfChildren = item.children.length; childIndex < numberOfChildren; childIndex++) {
 
-            for (var blockIndex = 0, numberOfBlocks = item.children[childIndex].blocks.length; blockIndex < numberOfBlocks; blockIndex++) {
+            var child = item.children[childIndex];
+            for (var childBlockIndex = 0, numberOfChildBlocks = child.blocks.length; childBlockIndex < numberOfChildBlocks; childBlockIndex++) {
 
+                var childBlock = child.blocks[childBlockIndex];
+                for (var blockIndex = 0, numberOfBlocks = blocks.length; blockIndex < numberOfBlocks; blockIndex++) {
 
+                    var block = blocks[blockIndex];
+                    if (childBlock.startDate < block.startDate && childBlock.endDate > block.startDate) {
+
+                        block.startDate = childBlock.startDate;
+                    }
+
+                    if (childBlock.endDate > block.endDate && childBlock.startDate < block.endDate) {
+
+                        block.endDate = childBlock.endDate;
+                    }
+                }
             }
         }
     }

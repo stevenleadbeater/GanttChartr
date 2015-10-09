@@ -714,7 +714,12 @@ Templatr.prototype._updateModelProperty = function (newDataModel, p, updateTarge
             //Make sure this value is actually different before attacking the DOM
             if (binding.replacementType == "innerText" && binding.boundValue != newDataModel[p]) {
                 //Elements value
-                elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel[p]);
+                if (elem.childNodes.length === 0) {
+                    var textNode = document.createTextNode(newDataModel[p]);
+                    elem.appendChild(textNode);
+                } else {
+                    elem.childNodes[0].nodeValue = elem.childNodes[0].nodeValue.replace(binding.boundValue, newDataModel[p]);
+                }
                 binding.boundValue = newDataModel[p];
             } else if (binding.boundValue != newDataModel[p]) {
                 //attributes value or part of
