@@ -76,19 +76,35 @@ EventController.prototype.processData = function (item, dataAccessor) {
                     var block = blocks[blockIndex];
                     var blockStart = block.startDate.getTime() - (1 * 86400000);
                     var childBlockStart = childBlock.startDate.getTime() - (1 * 86400000);
-                    if (childBlock.startDate.getTime() < block.startDate.getTime() && childBlock.endDate.getTime() >= blockStart) {
 
-                        block.startDate = childBlock.startDate;
-                    }
+                    if (item.showAdditiveArea) {
 
-                    if (childBlock.endDate.getTime() > block.endDate.getTime() && childBlockStart <= block.endDate.getTime()) {
+                        if (childBlock.startDate.getTime() < block.startDate.getTime() && childBlock.endDate.getTime() >= blockStart) {
 
-                        block.endDate = childBlock.endDate;
-                    }
+                            block.startDate = childBlock.startDate;
+                        }
 
-                    if (childBlockStart > block.endDate.getTime()) {
+                        if (childBlock.endDate.getTime() > block.endDate.getTime() && childBlockStart <= block.endDate.getTime()) {
 
-                        blocks.push(childBlock);
+                            block.endDate = childBlock.endDate;
+                        }
+
+                        if (childBlockStart > block.endDate.getTime()) {
+
+                            blocks.push(childBlock);
+                        }
+
+                    } else {
+
+                        if (childBlock.startDate.getTime() > block.startDate.getTime() && childBlockStart <= block.endDate.getTime()) {
+
+                            block.startDate = childBlock.startDate;
+                        }
+
+                        if (childBlock.endDate.getTime() < block.endDate.getTime() && childBlock.startDate.getTime() >= block.startDate.getTime()) {
+                            
+                            block.endDate = childBlock.endDate;
+                        }
                     }
                 }
             }

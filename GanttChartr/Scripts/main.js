@@ -72,6 +72,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
         toolTip: "parent tip",
         isCalculated: true,
         showGapsFromChildren: true,
+        showAdditiveArea: false,
         children: [{
             blocks: [
                 {
@@ -110,6 +111,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
         toolTip: "parent tip",
         isCalculated: true,
         showGapsFromChildren: true,
+        showAdditiveArea: false,
         children: [{
             blocks: [
                 {
@@ -178,6 +180,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 toolTip: "parent tip",
                 isCalculated: true,
                 showGapsFromChildren: true,
+                showAdditiveArea: false,
                 children: [{
                     blocks: [
                         {
@@ -192,7 +195,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 }, {
                     blocks: [
                         {
-                            startDate: new Date(2015, 1, 1),
+                            startDate: new Date(2015, 0, 29),
                             endDate: new Date(2015, 1, 20)
                         }],
                     displayText: "child 2",
@@ -208,6 +211,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 toolTip: "parent tip",
                 isCalculated: true,
                 showGapsFromChildren: true,
+                showAdditiveArea: false,
                 children: [{
                     blocks: [
                         {
@@ -222,7 +226,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 }, {
                     blocks: [
                         {
-                            startDate: new Date(2015, 1, 1),
+                            startDate: new Date(2015, 0, 29),
                             endDate: new Date(2015, 1, 20)
                         }],
                     displayText: "child 2",
@@ -245,6 +249,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 toolTip: "parent tip",
                 isCalculated: true,
                 showGapsFromChildren: true,
+                showAdditiveArea: false,
                 children: [{
                     blocks: [
                         {
@@ -275,6 +280,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                 toolTip: "parent tip",
                 isCalculated: true,
                 showGapsFromChildren: true,
+                showAdditiveArea: false,
                 children: [{
                     blocks: [
                         {
