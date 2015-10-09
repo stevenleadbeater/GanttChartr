@@ -85,6 +85,11 @@ EventController.prototype.processData = function (item, dataAccessor) {
 
                         block.endDate = childBlock.endDate;
                     }
+
+                    if (childBlockStart > block.endDate.getTime()) {
+
+                        blocks.push(childBlock);
+                    }
                 }
             }
         }

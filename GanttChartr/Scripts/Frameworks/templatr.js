@@ -655,7 +655,7 @@ Templatr.prototype._mergeRecursive = function (newDataModel, updateTarget, dataA
                     element.parentElement.removeChild(element);
 
                 }
-            } else if (Object.prototype.toString.call(currentBinding) === "[object Object]" && currentBinding.type === "repeater") {
+            } else if (Object.prototype.toString.call(currentBinding) === "[object Object]") {
                 element = document.getElementById(currentBinding.elementId);
                 element.parentElement.removeChild(element);
             }
