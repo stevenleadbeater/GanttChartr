@@ -108,7 +108,8 @@ EventController.prototype.processData = function (item, dataAccessor) {
 
                         if (block.endDate.getTime() <= childBlockStart && blockIndex === (numberOfBlocks - 1)) {
 
-                            blocks.pop();
+                            block.startDate = "";
+                            block.endDate = "";
                         }
                     }
                 }
