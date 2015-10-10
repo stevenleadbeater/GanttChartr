@@ -95,7 +95,7 @@ EventController.prototype.processData = function (item, dataAccessor) {
                         }
 
                     } else {
-
+                        
                         if (childBlock.startDate.getTime() > block.startDate.getTime() && childBlockStart <= block.endDate.getTime()) {
 
                             block.startDate = childBlock.startDate;
@@ -104,6 +104,11 @@ EventController.prototype.processData = function (item, dataAccessor) {
                         if (childBlock.endDate.getTime() < block.endDate.getTime() && childBlock.startDate.getTime() >= block.startDate.getTime()) {
                             
                             block.endDate = childBlock.endDate;
+                        }
+
+                        if (block.endDate.getTime() <= childBlockStart && blockIndex === (numberOfBlocks - 1)) {
+
+                            blocks.pop();
                         }
                     }
                 }
