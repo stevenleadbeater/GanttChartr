@@ -121,41 +121,9 @@ Templatr.prototype.copyAttributes = function (elementTo, elementFrom) {
 Templatr.prototype.bindRepeater = function (repeater, data, dataAccessor) {
 
     //Repeater contents as a whole are rendered inside a container
-    var returnValue,
-        makeLog = false;
-
-    switch (repeater.tagName) {
-        case "SELECT":
-        case "select":
-            returnValue = document.createElement("select");
-            this.copyAttributes(returnValue, repeater);
-            makeLog = true;
-            break;
-        case "UL":
-        case "ul":
-            returnValue = document.createElement("ul");
-            this.copyAttributes(returnValue, repeater);
-            makeLog = true;
-            break;
-        case "TR":
-        case "tr":
-            returnValue = document.createElement("tr");
-            this.copyAttributes(returnValue, repeater);
-            makeLog = true;
-            break;
-        case "TBODY":
-        case "tbody":
-            returnValue = document.createElement("tbody");
-            this.copyAttributes(returnValue, repeater);
-            makeLog = true;
-            break;
-        default:
-            returnValue = document.createElement("div");
-            this.copyAttributes(returnValue, repeater);
-            makeLog = true;
-            break;
-    }
-
+    var returnValue = document.createElement(repeater.tagName);
+    this.copyAttributes(returnValue, repeater);
+    
     //Number of iterations in the data repeater will go through
     var len = data.length;
 

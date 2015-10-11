@@ -1,8 +1,11 @@
 ﻿<div data-repeater="templatr">
-    <div data-repeater="templatr" class="calendarDetails1Row" datasource="{{ days }}">
-        <span class="calendarDetails1DayName">
-            <span data-repeater="templatr" datasource="{{ events }}">
-                <span class="{{ className }}" style="{{ width }}" data-number-of-days="{{ numberOfDays }}">{{ name }}</span>
+    <div class="ganttChartrRow">
+        <span class="ganttChartrRowName">{{name}}</span>
+        <span data-repeater="templatr" class="calendarDetails1Row" datasource="{{ days }}">
+            <span class="calendarDetails1DayName">
+                <span data-repeater="templatr" datasource="{{ events }}">
+                    <span class="{{ className }}" style="{{width}}" data-number-of-days="{{ numberOfDays }}">{{ name }}</span>
+                </span>
             </span>
         </span>
     </div>

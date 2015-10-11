@@ -74,6 +74,8 @@ EventController.prototype.processData = function (item, dataAccessor) {
                 for (var blockIndex = 0, numberOfBlocks = blocks.length; blockIndex < numberOfBlocks; blockIndex++) {
                     
                     var block = blocks[blockIndex];
+                    block.name = item.displayText;
+                    block.toolTip = item.toolTip;
                     var blockStart = block.startDate.getTime() - (1 * 86400000);
                     var childBlockStart = childBlock.startDate.getTime() - (1 * 86400000);
 
@@ -141,6 +143,7 @@ EventController.prototype.processData = function (item, dataAccessor) {
 EventController.prototype.MakeRow = function (rowTemplate, highlights) {
     var row = {}
     this.CloneObject(row, rowTemplate);
+    row.name = highlights[0].name;
 
     var rowController = new RowController(row, highlights);
     rowController.SpliceData();

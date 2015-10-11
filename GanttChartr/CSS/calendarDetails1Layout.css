@@ -9,6 +9,7 @@
 .calendarDetails1Row {
     height: 24px;
     white-space: nowrap;
+    font-size: 16px;
 }
 
 .highlight {
@@ -16,4 +17,15 @@
     z-index: 1;
     position: relative;
     padding: 2px;
+}
+
+.ganttChartrRow {
+    white-space: nowrap;
+    font-size: 0;
+}
+
+.ganttChartrRowName {
+    width: 100px;
+    display: inline-block;
+    font-size: 16px;
 }
