@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -73,6 +74,7 @@
     <Content Include="index.html" />
     <Content Include="Scripts\DateRangeHandler.js" />
     <Content Include="Scripts\EventController.js" />
+    <Content Include="Scripts\Frameworks\draggability.min.js" />
     <Content Include="Scripts\Frameworks\JSONT.js" />
     <Content Include="Scripts\Frameworks\templatr.js" />
     <Content Include="packages.config" />

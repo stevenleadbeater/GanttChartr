@@ -126,7 +126,7 @@ EventController.prototype.processData = function (item, dataAccessor) {
                 endDate: item.blocks[i].endDate,
                 name: item.displayText,
                 toolTip: item.toolTip,
-                id: item.id
+                id: item.blocks[i].id
             });
         }
     }
