@@ -1,5 +1,7 @@
 ﻿function Main() {
     this.templatr = new Templatr("test");
+    // array of Draggabillies
+    this.draggies = []
 };
 
 Main.prototype.Initialize = function () {
@@ -55,16 +57,16 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     this.templatr.addView("header", headerView);
     this.templatr.addView("detail", detailView);
 
-    var dateRangeHandler = new DateRangeHandler(new Date(2015, 0, 1), new Date(2015, 3, 0));
-    dateRangeHandler.GenerateDataStructure();
+    this.dateRangeHandler = new DateRangeHandler(new Date(2015, 0, 1), new Date(2015, 3, 0));
+    this.dateRangeHandler.GenerateDataStructure();
 
     var data = {};
-    data.Header = dateRangeHandler.dataStructure.Header;
+    data.Header = this.dateRangeHandler.dataStructure.Header;
     data.Rows = [];
 
 
-    var eventController = new EventController(dateRangeHandler);
-    eventController.LoadData([
+    this.eventController = new EventController(this.dateRangeHandler);
+    this.eventController.LoadData([
     {
         displayText: "parent",
         id: "1",
@@ -152,7 +154,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
         }]
     }]);
 
-    data.Rows = eventController.rows;
+    data.Rows = this.eventController.rows;
 
     var boundView = this.templatr.bind("calendar", data);
     document.getElementById("content").appendChild(boundView);
@@ -163,80 +165,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     }
     document.getElementById("initialLoad").innerText = setAverage(1, (t2 - t1));
 
-    var draggableElems = document.querySelectorAll('.draggable');
-    // array of Draggabillies
-    var draggies = []
-    // init Draggabillies
-    for (var i = 0, len = draggableElems.length; i < len; i++) {
-        var draggableElem = draggableElems[i];
-        var draggie = new Draggabilly(draggableElem, {
-            // options...
-            grid: [21, 24],
-            axis: 'x'
-        });
-
-        var start;
-
-        draggie.on('dragStart', function (event, pointer) {
-            start = pointer.srcElement.offsetLeft;
-        }.bind(this));
-
-        draggie.on('dragEnd', function (event, pointer) {
-            //alert((pointer.srcElement.offsetLeft - start) / 21);
-            var propertiesToWalk = pointer.srcElement.attributes["data-accesor"].value.split(".");
-            var event = null;
-            var modelProperty = null;
-            var addToNext = false;
-            for (var i = 0, len = propertiesToWalk.length; i < len; i++) {
-                if (propertiesToWalk[i] !== "") {
-                    if (modelProperty === null) {
-                        modelProperty = this.templatr.Model[propertiesToWalk[i]];
-                    } else {
-
-                        modelProperty = modelProperty[propertiesToWalk[i]];
-                        if (addToNext) {
-                            propertiesToWalk[i] = (parseInt(propertiesToWalk[i]) + (pointer.srcElement.offsetLeft - start) / 21).toString();
-                            addToNext = false;
-                        }
-                        if (propertiesToWalk[i] === "days") {
-                            addToNext = true;
-                        } else if (propertiesToWalk[i] === "events") {
-                            event = modelProperty.splice(propertiesToWalk[i + 1], 1)[0];
-                            modelProperty = null;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            for (var i = 0, len = propertiesToWalk.length; i < len; i++) {
-                if (propertiesToWalk[i] !== "") {
-                    if (modelProperty === null) {
-                        modelProperty = this.templatr.Model[propertiesToWalk[i]];
-                    } else {
-
-                        modelProperty = modelProperty[propertiesToWalk[i]];
-
-                        if (propertiesToWalk[i] === "events") {
-                            while (modelProperty.length > 1) {
-                                modelProperty.pop();
-                            }
-                            modelProperty.push(event);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            //this.templatr.updateDataModel(this.templatr.Model);
-            document.getElementById("content").removeChild(document.getElementById("content").firstChild);
-
-            var boundView = this.templatr.bind("calendar", this.templatr.Model);
-            document.getElementById("content").appendChild(boundView);
-        }.bind(this));
-
-        draggies.push(draggie);
-    }
+    this.AddDragabillyEventListeners();
 
     //var counter = 0;
     //setInterval(function () {
@@ -437,3 +366,85 @@ Main.prototype.CloneObject = function (obj1, obj2) {
         }
     }
 }
+
+Main.prototype.HandleDragStart = function (event, pointer) {
+    this.start = pointer.srcElement.offsetLeft;
+};
+
+Main.prototype.HandleDragEnd = function (event, pointer) {
+
+    this.RemoveDragabillyEventListeners();
+    //alert((pointer.srcElement.offsetLeft - start) / 21);
+
+    var model = this.eventController.Model;
+    for (var eventIndex = 0, eventLength = model.length; eventIndex < eventLength; eventIndex++) {
+
+        var eventItem = model[eventIndex];
+        for (var childIndex = 0, childLength = eventItem.children.length; childIndex < childLength; childIndex++) {
+
+            var child = eventItem.children[childIndex];
+            for (var blockIndex = 0, blockLength = child.blocks.length; blockIndex < blockLength; blockIndex++) {
+
+                var block = child.blocks[blockIndex];
+                if (block.id === pointer.srcElement.attributes["data-id"].value) {
+
+                    block.startDate.setTime(block.startDate.getTime() + (((pointer.srcElement.offsetLeft - this.start) / 21) * 86400000));
+                    block.endDate.setTime(block.endDate.getTime() + (((pointer.srcElement.offsetLeft - this.start) / 21) * 86400000));
+                }
+            }
+        }
+    }
+
+    var data = {};
+    data.Header = this.dateRangeHandler.dataStructure.Header;
+    data.Rows = [];
+
+    this.eventController = new EventController(this.dateRangeHandler);
+    this.eventController.LoadData(model);
+
+    data.Rows = this.eventController.rows;
+
+    this.templatr.updateDataModel(data);
+            
+    this.start = null;
+
+    this.AddDragabillyEventListeners();
+};
+
+Main.prototype.AddDragabillyEventListeners = function () {
+
+    var draggableElems = document.querySelectorAll('.draggable');
+    
+    // init Draggabillies
+    for (var i = 0, len = draggableElems.length; i < len; i++) {
+        var draggableElem = draggableElems[i];
+        var draggie = new Draggabilly(draggableElem, {
+            // options...
+            grid: [21, 24],
+            axis: 'x'
+        });
+
+        this.start = null;
+
+        draggie.on('dragStart', this.HandleDragStart.bind(this));
+
+        draggie.on('dragEnd', this.HandleDragEnd.bind(this));
+
+        this.draggies.push(draggie);
+    }
+
+};
+
+Main.prototype.RemoveDragabillyEventListeners = function () {
+        
+    for (var i = 0, len = this.draggies.length - 1; i >= len; len--) {
+        var draggie = this.draggies[len];
+
+        draggie.off('dragStart', this.HandleDragStart.bind(this));
+
+        draggie.off('dragEnd', this.HandleDragEnd.bind(this));
+
+        this.draggies.pop(draggie);
+    }
+
+};
