@@ -369,9 +369,15 @@ Main.prototype.CloneObject = function (obj1, obj2) {
 
 Main.prototype.HandleDragStart = function (event, pointer) {
     this.start = pointer.srcElement.offsetLeft;
+    this.element = pointer.srcElement;
 };
 
 Main.prototype.HandleDragEnd = function (event, pointer) {
+    try {
+        var t1 = window.performance.now();
+    } catch (ex) {
+        var t1 = new Date().getTime();
+    }
 
     this.RemoveDragabillyEventListeners();
     //alert((pointer.srcElement.offsetLeft - start) / 21);
@@ -386,10 +392,10 @@ Main.prototype.HandleDragEnd = function (event, pointer) {
             for (var blockIndex = 0, blockLength = child.blocks.length; blockIndex < blockLength; blockIndex++) {
 
                 var block = child.blocks[blockIndex];
-                if (block.id === pointer.srcElement.attributes["data-id"].value) {
+                if (block.id === this.element.attributes["data-id"].value) {
 
-                    block.startDate.setTime(block.startDate.getTime() + (((pointer.srcElement.offsetLeft - this.start) / 21) * 86400000));
-                    block.endDate.setTime(block.endDate.getTime() + (((pointer.srcElement.offsetLeft - this.start) / 21) * 86400000));
+                    block.startDate.setTime(block.startDate.getTime() + (((this.element.offsetLeft - this.start) / 21) * 86400000));
+                    block.endDate.setTime(block.endDate.getTime() + (((this.element.offsetLeft - this.start) / 21) * 86400000));
                 }
             }
         }
@@ -405,16 +411,29 @@ Main.prototype.HandleDragEnd = function (event, pointer) {
     data.Rows = this.eventController.rows;
 
     this.templatr.updateDataModel(data);
-            
+
+    //document.getElementById("content").removeChild(document.getElementById("content").firstChild);
+
+    //var boundView = this.templatr.bind("calendar", data);
+    //document.getElementById("content").appendChild(boundView);
+
     this.start = null;
+    this.element = null;
 
     this.AddDragabillyEventListeners();
+
+    try {
+        var t2 = window.performance.now();
+    } catch (ex) {
+        var t2 = new Date().getTime();
+    }
+    document.getElementById("updateAverage").innerText = setAverage(1, (t2 - t1));
 };
 
 Main.prototype.AddDragabillyEventListeners = function () {
 
     var draggableElems = document.querySelectorAll('.draggable');
-    
+
     // init Draggabillies
     for (var i = 0, len = draggableElems.length; i < len; i++) {
         var draggableElem = draggableElems[i];
@@ -436,7 +455,7 @@ Main.prototype.AddDragabillyEventListeners = function () {
 };
 
 Main.prototype.RemoveDragabillyEventListeners = function () {
-        
+
     for (var i = 0, len = this.draggies.length - 1; i >= len; len--) {
         var draggie = this.draggies[len];
 

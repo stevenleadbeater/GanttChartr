@@ -21,7 +21,7 @@ RowController.prototype.SpliceData = function () {
                 day.events.push({
                     name: highlight.name,
                     id: highlight.id,
-                    className: "highlight",
+                    className: "highlight draggable",
                     width: "width: " + ((this.GetDaysBetween(highlight.startDate, highlight.endDate)*21) - 5) + "px;",
                     numberOfDays: this.GetDaysBetween(highlight.startDate, highlight.endDate)
                 });
