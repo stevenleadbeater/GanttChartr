@@ -98,21 +98,25 @@ EventController.prototype.processData = function (item, dataAccessor) {
 
                     } else {
                         
+                        if (childBlockStart > block.endDate.getTime() || childBlock.endDate.getTime() < blockStart) {
+                            continue;
+                        }
+
                         if (childBlock.startDate.getTime() > block.startDate.getTime() && childBlockStart <= block.endDate.getTime()) {
 
-                            block.startDate = childBlock.startDate;
+                            block.startDate.setTime(childBlock.startDate.getTime());
                         }
 
-                        if (childBlock.endDate.getTime() < block.endDate.getTime() && childBlock.startDate.getTime() >= block.startDate.getTime()) {
+                        if (childBlock.endDate.getTime() < block.endDate.getTime() && childBlockStart <= block.endDate.getTime()) {
                             
-                            block.endDate = childBlock.endDate;
+                            block.endDate.setTime(childBlock.endDate.getTime());
                         }
 
-                        if (block.endDate.getTime() <= childBlockStart && blockIndex === (numberOfBlocks - 1)) {
+                        //if (block.endDate.getTime() <= childBlockStart && blockIndex === (numberOfBlocks - 1)) {
 
-                            block.startDate = "";
-                            block.endDate = "";
-                        }
+                        //    block.startDate = "";
+                        //    block.endDate = "";
+                        //}
                     }
                 }
             }

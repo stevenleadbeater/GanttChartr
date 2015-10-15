@@ -2,6 +2,9 @@
     this.templatr = new Templatr("test");
     // array of Draggabillies
     this.draggies = []
+
+    //this.HandleDragEndInContext = this.HandleDragStart.bind(this);
+    //this.HandleDragEndInContext = this.HandleDragEnd.bind(this);
 };
 
 Main.prototype.Initialize = function () {
@@ -432,11 +435,11 @@ Main.prototype.HandleDragEnd = function (event, pointer) {
 
 Main.prototype.AddDragabillyEventListeners = function () {
 
-    var draggableElems = document.querySelectorAll('.draggable');
+    this.draggableElems = document.querySelectorAll('.draggable');
 
     // init Draggabillies
-    for (var i = 0, len = draggableElems.length; i < len; i++) {
-        var draggableElem = draggableElems[i];
+    for (var i = 0, len = this.draggableElems.length; i < len; i++) {
+        var draggableElem = this.draggableElems[i];
         var draggie = new Draggabilly(draggableElem, {
             // options...
             grid: [21, 24],
@@ -445,9 +448,9 @@ Main.prototype.AddDragabillyEventListeners = function () {
 
         this.start = null;
 
-        draggie.on('dragStart', this.HandleDragStart.bind(this));
+        draggie.once('dragStart', this.HandleDragStart.bind(this));
 
-        draggie.on('dragEnd', this.HandleDragEnd.bind(this));
+        draggie.once('dragEnd', this.HandleDragEnd.bind(this));
 
         this.draggies.push(draggie);
     }
@@ -456,14 +459,13 @@ Main.prototype.AddDragabillyEventListeners = function () {
 
 Main.prototype.RemoveDragabillyEventListeners = function () {
 
-    for (var i = 0, len = this.draggies.length - 1; i >= len; len--) {
-        var draggie = this.draggies[len];
+    for (var i = 0, len = this.draggies.length; i < len; i++) {
+        var draggie = this.draggies[i];
 
         draggie.off('dragStart', this.HandleDragStart.bind(this));
 
         draggie.off('dragEnd', this.HandleDragEnd.bind(this));
 
-        this.draggies.pop(draggie);
     }
 
 };
