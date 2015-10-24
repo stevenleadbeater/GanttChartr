@@ -49,31 +49,33 @@ EventController.prototype.processData = function (item, dataAccessor) {
     var startDate,
         endDate;
 
-    var blocks = [];
+    if (item.isCalculated) {
+        item.blocks = [];
+    }
 
     if (item.isCalculated && !item.showGapsFromChildren) {
         startDate = this.levelStart;
         endDate = this.levelEnd;
 
-        blocks.push({
-            startDate: startDate,
-            endDate: endDate,
+        item.blocks.push({
+            startDate: new Date(startDate.getTime()),
+            endDate: new Date(endDate.getTime()),
             name: item.displayText,
             toolTip: item.toolTip,
             id: item.id
         });
     } else if (item.isCalculated && item.showGapsFromChildren) {
 
-        blocks = item.children[0].blocks;
+        item.blocks = item.children[0].blocks;
         for (var childIndex = 1, numberOfChildren = item.children.length; childIndex < numberOfChildren; childIndex++) {
 
             var child = item.children[childIndex];
             for (var childBlockIndex = 0, numberOfChildBlocks = child.blocks.length; childBlockIndex < numberOfChildBlocks; childBlockIndex++) {
 
                 var childBlock = child.blocks[childBlockIndex];
-                for (var blockIndex = 0, numberOfBlocks = blocks.length; blockIndex < numberOfBlocks; blockIndex++) {
+                for (var blockIndex = 0, numberOfBlocks = item.blocks.length; blockIndex < numberOfBlocks; blockIndex++) {
                     
-                    var block = blocks[blockIndex];
+                    var block = item.blocks[blockIndex];
                     block.name = item.displayText;
                     block.toolTip = item.toolTip;
                     var blockStart = block.startDate.getTime() - (1 * 86400000);
@@ -83,17 +85,17 @@ EventController.prototype.processData = function (item, dataAccessor) {
 
                         if (childBlock.startDate.getTime() < block.startDate.getTime() && childBlock.endDate.getTime() >= blockStart) {
 
-                            block.startDate = childBlock.startDate;
+                            block.startDate = new Date(childBlock.startDate.getTime());
                         }
 
                         if (childBlock.endDate.getTime() > block.endDate.getTime() && childBlockStart <= block.endDate.getTime()) {
 
-                            block.endDate = childBlock.endDate;
+                            block.endDate = new Date(childBlock.endDate.getTime());
                         }
 
                         if (childBlockStart > block.endDate.getTime()) {
 
-                            blocks.push(childBlock);
+                            item.blocks.push(childBlock);
                         }
 
                     } else {
@@ -104,12 +106,12 @@ EventController.prototype.processData = function (item, dataAccessor) {
 
                         if (childBlock.startDate.getTime() > block.startDate.getTime() && childBlockStart <= block.endDate.getTime()) {
 
-                            block.startDate.setTime(childBlock.startDate.getTime());
+                            block.startDate = new Date(childBlock.startDate.getTime());
                         }
 
                         if (childBlock.endDate.getTime() < block.endDate.getTime() && childBlockStart <= block.endDate.getTime()) {
                             
-                            block.endDate.setTime(childBlock.endDate.getTime());
+                            block.endDate = new Date(childBlock.endDate.getTime());
                         }
 
                         //if (block.endDate.getTime() <= childBlockStart && blockIndex === (numberOfBlocks - 1)) {
@@ -121,27 +123,23 @@ EventController.prototype.processData = function (item, dataAccessor) {
                 }
             }
         }
-    }
-    else {
-        for(var i = 0, len = item.blocks.length; i < len; i ++)
-        {
-            blocks.push({
-                startDate: item.blocks[i].startDate,
-                endDate: item.blocks[i].endDate,
-                name: item.displayText,
-                toolTip: item.toolTip,
-                id: item.blocks[i].id
-            });
+    } else {
+        for (var i = 0, len = item.blocks.length; i < len; i++) {
+            item.blocks[i].name = item.displayText;
+            item.blocks[i].toolTip = item.toolTip;
+            item.blocks[i].id = item.id;                
         }
     }
-    var row = this.MakeRow(this.dateRangeHandler.dataStructure.row, blocks);
 
-    rows.push(row);
+    
+var row = this.MakeRow(this.dateRangeHandler.dataStructure.row, item.blocks);
 
-    if (childRows !== null) {
-        rows = rows.concat(childRows);
-    }
-    return rows;
+rows.push(row);
+
+if (childRows !== null) {
+    rows = rows.concat(childRows);
+}
+return rows;
 };
 
 EventController.prototype.MakeRow = function (rowTemplate, highlights) {

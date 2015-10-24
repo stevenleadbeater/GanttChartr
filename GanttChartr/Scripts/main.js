@@ -115,7 +115,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
     },
     {
         displayText: "parent",
-        id: "1",
+        id: "2",
         toolTip: "parent tip",
         isCalculated: true,
         showGapsFromChildren: true,
@@ -133,7 +133,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                     id: "006"
                 }],
             displayText: "child 1",
-            id: "1.1",
+            id: "2.1",
             toolTip: "child 1 tip",
             isCalculated: false,
             children: []
@@ -150,7 +150,7 @@ Main.prototype.HandleViewReturn = function (headerView, masterView, detailView) 
                     id: "008"
                 }],
             displayText: "child 2",
-            id: "1.2",
+            id: "2.2",
             toolTip: "child 2 tip",
             isCalculated: false,
             children: []
